@@ -1,0 +1,9 @@
+import pandas as pd
+import quandl
+import math
+
+#getting the data set from quandle for free sick wiki dataset
+df = Quandl.get('WIKI/GOOGL') 
+#each column is a feature EX: open high low close ...
+print(df.head())
+
