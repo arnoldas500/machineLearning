@@ -1,3 +1,5 @@
+#run source py3/bin/activate to activate correct python env to run this file
+
 import pandas as pd
 import quandl
 import math, datetime
@@ -5,6 +7,8 @@ import numpy as np
 from sklearn import preprocessing, cross_validation, svm
 import matplotlib.pyplot as plt
 from matplotlib import style
+#picking is a good thing to have to save time when doing seralization of a classifier
+import pickle
 
 style.use('ggplot')
 
@@ -61,18 +65,25 @@ X_lately = X[-forecast_out:]
 
 df.dropna(inplace=True) 
 y = np.array(df['label'])
-y = np.array(df['label'])
+
 
 print(len(X),len(y))
 
 #going to use 20%, takes all our features and labels and shuffels them up but keeping x and y connected
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
 
-
+#****Could comment out below because the pcikle is saved and dont have to retrain****
 #clf is a clasifier
 #n_jobs is how many threads we want to use per batch (-1 runs as many as it can by your cpu)
 clfLR = LinearRegression(n_jobs=10)
 clfLR.fit(X_train, y_train)
+#can save the training so you dont have to train it everytime
+with open('linearregression.pickle','wb') as f:
+    pickle.dump(clfLR, f)
+#***can comment out till here if using pickle saved in local dir*** (pickle data is the classifier)
+
+pickle_in = open('linearregression.pickle','rb')
+clfLR = pickle.load(pickle_in) #load it in
 
 accuracyLR = clfLR.score(X_test, y_test)
 
