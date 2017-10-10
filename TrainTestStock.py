@@ -44,7 +44,7 @@ forecast_col = 'Adj. Close'
 df.fillna(-99999, inplace=True) # fill any empty spots with -99999
 
 #number of days out for how many days we are predicting (0.01 for 01% out)
-forecast_out = int(math.ceil(0.01*len(df)))
+forecast_out = int(math.ceil(0.1*len(df)))
 print("number of days we are predicting %d" %forecast_out)
 
 #shifting the columns negatively so each row will be adjusted close price for 10 days into the future
@@ -53,11 +53,12 @@ df['label'] = df[forecast_col].shift(-forecast_out)
 #print(df.head())
 
 #features are a capital X
-X = np.array(df.drop(['label'],1))
+X = np.array(df.drop(['label','Adj. Close'],1))
 #print(X)
 X = preprocessing.scale(X)
-X = X[:-forecast_out]
 X_lately = X[-forecast_out:]
+X = X[:-forecast_out]
+
 #labels are lowercase y
 #y= np.array(df['label'])
 

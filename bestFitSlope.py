@@ -2,12 +2,27 @@ from statistics import mean
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import style
+import random
 
 style.use('fivethirtyeight')
 #a regression line is just like a straight line (same as best fit line)
 
-xs = np.array([1,2,3,4,5,6], dtype=np.float64)
-ys = np.array([5,4,6,5,6,7], dtype=np.float64)
+#xs = np.array([1,2,3,4,5,6], dtype=np.float64)
+#ys = np.array([5,4,6,5,6,7], dtype=np.float64)
+
+def createDataset(howMany, variance, step=2, correlation=False):
+    val = 1
+    ys = []
+    for i in range(howMany):
+        y = val + random.randrange(-variance, variance)
+        ys.append(y)
+        if correlation and correlation == 'pos':
+            val+=step
+        elif correlation and correlation == 'neg':
+            val -= step
+    xs = [i for i in  range(len(ys))]
+    
+    return np.array(xs, dtype=np.float64), np.array(ys, dtype=np.float64)
 
 #finding m for best fit slope and y for intercept in eq y = mx + b
 def bestFitSlopeIntercept(xs,ys):
@@ -25,6 +40,9 @@ def coefficientOfDetermination(ysOrig, ysLine):
     return 1 - (squaredErrRegr / squaredErrYMean)
 
 
+xs,ys = createDataset(40, 40, 2, correlation = 'pos')
+
+
 m,b = bestFitSlopeIntercept(xs,ys)
 
 print(m,b)
@@ -40,7 +58,7 @@ rSquared = coefficientOfDetermination(ys, regressionLine)
 print(rSquared)
 
 plt.scatter(xs,ys)
-plt.scatter(predictX,predictY, color='red')
+plt.scatter(predictX,predictY, s=80 , color='red')
 plt.plot(xs, regressionLine)
 plt.show()
 

@@ -18,6 +18,7 @@ import numpy as np
 from sklearn import preprocessing, cross_validation, svm
 import matplotlib.pyplot as plt
 from matplotlib import style
+#import bestFitSlope as bfs
 #picking is a good thing to have to save time when doing seralization of a classifier
 import pickle
 
@@ -54,11 +55,11 @@ df = df [[ 'Close', 'HL_PCT', 'PCT_change', 'Volume (Currency)' ]]
 forecast_col = 'Close'
 df.fillna(-99999, inplace=True) # fill any empty spots with -99999
 
-#number of days out for how many days we are predicting (0.01 for 01% out)
-forecast_out = int(math.ceil(0.01*len(df)))
+#number of days out for how many days we are predicting (0.1 for 10% out)
+forecast_out = int(math.ceil(0.05*len(df)))
 print("number of days we are predicting %d" %forecast_out)
 
-#shifting the columns negatively so each row will be adjusted close price for 10 days into the future
+#shifting the columns negatively so each row will be adjusted close price for days into the future
 df['label'] = df[forecast_col].shift(-forecast_out)
 #df.dropna(inplace=True)
 #print(df.head())
@@ -67,8 +68,11 @@ df['label'] = df[forecast_col].shift(-forecast_out)
 X = np.array(df.drop(['label'],1))
 #print(X)
 X = preprocessing.scale(X)
-X = X[:-forecast_out]
 X_lately = X[-forecast_out:]
+#x first is 90% of data
+X = X[:-forecast_out]
+
+
 #labels are lowercase y
 #y= np.array(df['label'])
 
@@ -99,6 +103,7 @@ clfLR = pickle.load(pickle_in) #load it in
 accuracyLR = clfLR.score(X_test, y_test)
 
 print("Linear regression test: %f"%accuracyLR)
+
 
 clfSVM = svm.SVR() 
 clfSVM.fit(X_train, y_train)
