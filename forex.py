@@ -11,13 +11,21 @@ def graphRawFx():
                                 unpack=True, 
                                 delimiter=',', 
                                 converters={0:mdates.bytespdate2num('%Y%m%d%H%M%S')})
-    # numpy passes a byte string to the converter instead of a string. In python 2, since bytes and str are equivalent it does not matter. For python 3, however, this results in an error as strpdate2num passes it to the standard library's strptime which only expects a string.
+    # numpy passes a byte string to the converter instead of a string. In python 2, since bytes and str are equivalent it does not matter. For python 3, however, this results in an error as strpdate2num passes it to the standard library's strptime which only expects a string. (can use slashes too if we have slashes ex 2017/10/30)
     fig = plt.figure(figsize=(10,7))
     ax1= plt.subplot2grid((40,40), (0,0), rowspan=40, colspan=40)
     ax1.plot(date,bid)
     ax1.plot(date,ask)
+    plt.gca().get_yaxis().get_major_formatter().set_useOffset(False)
     
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%y-%m-%d %H:%M:%S'))
+    for label in ax1.xaxis.get_ticklabels():
+        label.set_rotation(45)
+
+    plt.subplots_adjust(bottom=.23)#making more room in the bottom so you can see full dates
+
+    ax1_2 = ax1.twinx()
+    ax1_2.fill_between(date, 0, (ask-bid), facecolor='g', alpha=.3) #ask- bid is the spread
     
     plt.grid(True)
     plt.show()
