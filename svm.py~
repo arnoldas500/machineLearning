@@ -1,23 +1,29 @@
+import matplotlib.pyplot as plt
+from matplotlib import style
 import numpy as np
-from sklearn import preprocessing, cross_validation, neighbors, svm
-import pandas as pd
+style.use('ggplot')
 
-df = pd.read_csv('breast-cancer-wisconsin.data.txt')
-df.replace('?',-99999, inplace=True)
-df.drop(['id'], 1, inplace=True)
+class Support_Vector_Machine:
+    def __init__(self, visualization=True):
+        self.visualization = visualization
+        self.colors = {1:'r',-1:'b'}
+        if self.visualization:
+            self.fig = plt.figure()
+            self.ax = self.fig.add_subplot(1,1,1)
+    # train
+    def fit(self, data):
+        pass
 
-X = np.array(df.drop(['class'], 1))
-y = np.array(df['class'])
+    def predict(self,features):
+        # sign( x.w+b )
+        classification = np.sign(np.dot(np.array(features),self.w)+self.b)
 
-X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
-
-clf = svm.SVC()
-
-clf.fit(X_train, y_train)
-confidence = clf.score(X_test, y_test)
-print(confidence)
-
-example_measures = np.array([[4,2,1,1,1,2,3,2,1]])
-example_measures = example_measures.reshape(len(example_measures), -1)
-prediction = clf.predict(example_measures)
-print(prediction)
+        return classification
+        
+data_dict = {-1:np.array([[1,7],
+                          [2,8],
+                          [3,8],]),
+             
+             1:np.array([[5,1],
+                         [6,-1],
+                         [7,3],])}

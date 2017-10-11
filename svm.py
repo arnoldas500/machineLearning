@@ -1,30 +1,109 @@
-#svm - support vector machine
-#a binary classifier, negative or positive (seperates into 2 groups at a time) 
-#find the best seperating hyper plane or decision boundary
-#need to find best seperating hyper plane, then new datapoints are given a label based on what side they are on
-#can use convex for optimization in python
-#use cvxopt for quad problems
-#libsvm also solves svm optimization problem   
+import matplotlib.pyplot as plt
+from matplotlib import style
 import numpy as np
-from sklearn import preprocessing, cross_validation, neighbors, svm
-import pandas as pd
+style.use('ggplot')
 
-df = pd.read_csv('breast-cancer-wisconsin.data.txt')
-df.replace('?',-99999, inplace=True)
-df.drop(['id'], 1, inplace=True)
+class Support_Vector_Machine:
+    def __init__(self, visualization=True):
+        self.visualization = visualization
+        self.colors = {1:'r',-1:'b'}
+        if self.visualization:
+            self.fig = plt.figure()
+            self.ax = self.fig.add_subplot(1,1,1)
+    # train
+    def fit(self, data):
+        self.data = data
+        # { ||w||: [w,b] } 
+        #dictionary using the magnitude of w as the key and values are list of [w,b]
+        opt_dict = {}
 
-X = np.array(df.drop(['class'], 1))
-y = np.array(df['class'])
+        transforms = [[1,1],
+                      [-1,1],
+                      [-1,-1],
+                      [1,-1]]
 
-X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
+        all_data = []
+        for yi in self.data: #yi is the class
+            for featureset in self.data[yi]:
+                for feature in featureset:
+                    all_data.append(feature)
 
-clf = svm.SVC()
+        self.max_feature_value = max(all_data)
+        self.min_feature_value = min(all_data)
+        all_data = None #clear it from memory 
+        
+        #first take big steps of .1 then smaller .01 and then really small which is slowest at .001
+        step_sizes = [self.max_feature_value * 0.1,
+                      self.max_feature_value * 0.01,
+                      # point of expense:
+                      self.max_feature_value * 0.001,]
+        
+        # extremely expensive doesnt need to be as percise as the step size for w
+        b_range_multiple = 5
+        # we dont need to take as small of steps
+        # with b as we do w
+        b_multiple = 5
+        #first element in vector w
+        latest_optimum = self.max_feature_value*10
 
-clf.fit(X_train, y_train)
-confidence = clf.score(X_test, y_test)
-print(confidence)
+        for step in step_sizes:
+            #start at the top of the hill
+            w = np.array([latest_optimum,latest_optimum])
+            # we can do this because convex
+            optimized = False
+            while not optimized:
+                for b in np.arange(-1*(self.max_feature_value*b_range_multiple),
+                                   self.max_feature_value*b_range_multiple,
+                                   step*b_multiple):
+                    for transformation in transforms:
+                        w_t = w*transformation
+                        found_option = True
+                        # weakest link in the SVM fundamentally
+                        # SMO attempts to fix this a bit
+                        # yi(xi.w+b) >= 1
+                        # 
+                        # #### add a break here later..
+                        #has to be run on all the data 
+                        for i in self.data: #i is the class
+                            for xi in self.data[i]:
+                                yi=i
+                                if not yi*(np.dot(w_t,xi)+b) >= 1:
+                                    found_option = False
+                                    #break
+                                    
+                        if found_option:
+                            #magnitude of the vector
+                            opt_dict[np.linalg.norm(w_t)] = [w_t,b]
 
-example_measures = np.array([[4,2,1,1,1,2,3,2,1]])
-example_measures = example_measures.reshape(len(example_measures), -1)
-prediction = clf.predict(example_measures)
-print(prediction)
+                if w[0] < 0:
+                    optimized = True
+                    print('Optimized a step.')
+                else:
+                    # w = [5,5]
+                    # step = 1
+                    # w - step = [4,4]
+                    w = w - step
+
+            #norms is the magnitude 
+            norms = sorted([n for n in opt_dict]) # get a sorted list of all the magnitudes
+            #||w|| : [w,b]
+            opt_choice = opt_dict[norms[0]] #getting the smallest magnitude since sorted from smalles to biggest
+            self.w = opt_choice[0]
+            self.b = opt_choice[1]
+            #next step 
+            latest_optimum = opt_choice[0][0]+step*2
+
+    def predict(self,features):
+        # sign( x.w+b )
+        classification = np.sign(np.dot(np.array(features),self.w)+self.b)
+
+        return classification
+        
+#they keys are the class (so -1 and 1)
+data_dict = {-1:np.array([[1,7],
+                          [2,8],
+                          [3,8],]),
+             
+             1:np.array([[5,1],
+                         [6,-1],
+                         [7,3],])}
