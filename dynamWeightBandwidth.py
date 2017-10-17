@@ -40,8 +40,11 @@ class Mean_Shift:
     def fit(self,data):
 
         if self.radius == None:
+            #getting the center for all ouf the data
             all_data_centroid = np.average(data,axis=0)
+            #magnitude from the origin 
             all_data_norm = np.linalg.norm(all_data_centroid)
+            #finding a good radius to use (so its the entire norm / the radius step
             self.radius = all_data_norm/self.radius_norm_step
             print(self.radius)
 
@@ -49,7 +52,8 @@ class Mean_Shift:
 
         for i in range(len(data)):
             centroids[i] = data[i]
-
+            
+        #so the weights are from zero to the step and then reversed ex 99,98,97...0
         weights = [i for i in range(self.radius_norm_step)][::-1]    
         while True:
             new_centroids = []
@@ -62,7 +66,7 @@ class Mean_Shift:
                     distance = np.linalg.norm(featureset-centroid)
                     if distance == 0:
                         distance = 0.00000000001
-                    weight_index = int(distance/self.radius)
+                    weight_index = int(distance/self.radius) #how many steps we took
                     if weight_index > self.radius_norm_step-1:
                         weight_index = self.radius_norm_step-1
 
@@ -76,10 +80,12 @@ class Mean_Shift:
 
             to_pop = []
 
+            #to get rid of points that are really close to each other
             for i in uniques:
                 for ii in [i for i in uniques]:
                     if i == ii:
                         pass
+                    #if the two verticles are within one radius of each other then converge them
                     elif np.linalg.norm(np.array(i)-np.array(ii)) <= self.radius:
                         #print(np.array(i), np.array(ii))
                         to_pop.append(ii)
@@ -114,7 +120,7 @@ class Mean_Shift:
         for featureset in data:
             #compare distance to either centroid
             distances = [np.linalg.norm(featureset-self.centroids[centroid]) for centroid in self.centroids]
-            #print(distances)
+            #print(distances) whatever centroid has the smallest distance is our classifier
             classification = (distances.index(min(distances)))
 
             # featureset that belongs to that cluster
