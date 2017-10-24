@@ -16,13 +16,22 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
     for each_dir in stock_list[1:]:
         #taking all the files in each directory and saving them
         each_file = os.listdir(each_dir)
+        ticker = each_dir.split("\\")[1]
         #print(each_file)
         if len(each_file) > 0:
             for file in each_file:
                 #explain to date-time what the format for our date stamp is, then we convert to a unix time stamp
                 date_stamp = datetime.strptime(file, '%Y%m%d%H%M%S.html')
                 unix_time = time.mktime(date_stamp.timetuple())
-                print(date_stamp, unix_time)
+                #print(date_stamp, unix_time)
                 #time.sleep(15)
+                full_file_path = each_dir+'/'+file
+                print(full_file_path)
+                source = open(full_file_path,'r').read()
+                #print(source)
+                value = source.split(gather+':</td><td class="yfnc_tabledata1">')[1].split('</td>')[0]
+                print(ticker+":",value)
+            
+            time.sleep(15)
 
 Key_Stats()
