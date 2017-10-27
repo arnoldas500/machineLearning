@@ -30,7 +30,9 @@ df = pd.DataFrame() #creates a new dataframe that's empty
 
 x = PrettyTable()
 x.field_names = ["Count", "ID", "Date", "Text", "Polarity"]
+cols = ["ID", "Date", "Polarity"]
 n = 1
+data = []
 
 for page in tweepy.Cursor(api.user_timeline, id=targettwitterprofile, count=200).pages(20):
     for tweet in page:
@@ -39,20 +41,23 @@ for page in tweepy.Cursor(api.user_timeline, id=targettwitterprofile, count=200)
         tweettext = tweet.text
         polarity = round(TextBlob(tweettext).sentiment.polarity,4)
         x.add_row([n,tweetid, tweetdate, tweettext, polarity])
-        df['polarity'] = polarity
-        print(polarity)
+        #df['polarity'].append(polarity)
+        data.append([tweetid,tweetdate,polarity])
+        #print(polarity)
         #df = pd.DataFrame(x)
         #print(df.head())
         #c.execute("insert into "+targettwitterprofile+" values (?,?,?,?)", (tweetid, tweetdate, tweettext, polarity))
         n+=1
    # time.sleep(65)
 
+dfNew = pd.DataFrame(data, columns=cols)
+#print(data)
 #df['tweetid'] = tweetid
 #df['tweetdate'] = tweetdate
 #df['polarity'] =  polarity                                                                                   
 
-print(df['polarity'])
-print(df.head()) 
+#print(df['polarity'])
+print(dfNew.head()) 
 
 #print(x)
 
