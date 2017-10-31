@@ -3,8 +3,14 @@ from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 #import MySQLdb
 import time
+import datetime
 import json
-
+import pandas as pd
+import textblob
+'''
+EX DATA:
+{"created_at":"Tue Oct 31 19:34:20 +0000 2017","id":925445854005284866,"id_str":"925445854005284866","text":"I wonder what kind of money are pumbing #BitcoinGold right now. \n\n#bitcoin" ...
+'''
 
 
 #        replace mysql.server with "localhost" if you are running via your own server!
@@ -12,6 +18,11 @@ import json
 #conn = MySQLdb.connect("mysql.server","beginneraccount","cookies","beginneraccount$tutorial")
 
 #c = conn.cursor()
+
+'''
+# Convert created_at to datetimes
+df['created_at'] = pd.to_datetime(df['created_at'])
+'''
 
 
 #consumer key, consumer secret, access token, access secret.
@@ -21,18 +32,50 @@ consumer_secret = '46e1t5l5uZDUY3WfuNf0NwzsNVdPnJS7qtVjVc6HKwxfH0BYX4'
 access_token = '398425873-SL80lXVpCqZN8zTTNWSz6pBWRdy1CwzdWQlRrBEu'
 access_token_secret = 'FAmHxrdwJfnrcjRVKvuxVRpoQfezjS7npTc6dH20EfwAq'
 
+dataList = []
+cols = ["Date", "Tweet", "Polarity", "Subjectivity"]
 class listener(StreamListener):
 
     def on_data(self, data):
         try:
-            print(data)
+            #print(data)
+            #full tweet
+            #tweet = data.split(',"text":"')[1].split('","source')[0] #give us the right side of the split [1] and then the left side [0]
+            #print(tweet)
+            #saving the current tweet with unix timestamp
+            #saveCur = str(time.time())+':::'+tweet
+            #print(saveCur)
+            #dataList = []
+            allData = json.loads(data)
+            tweet = allData["text"]
+            date = allData["created_at"]
+            blob = textblob.TextBlob(tweet).sentiment
+            polarity = int(round(blob.polarity))
+            subj = blob.subjectivity
+            #print(date+tweet)
+            #print("polarity is : "+ str(polarity))
+            #The polarity score is a float within the range [-1.0, 1.0] 1 is pos and -1 is neg
+#The subjectivity is a float within the range [0.0, 1.0] where 0.0 is very objective and 1.0 is very subjective.
+            dataList.append([date, tweet, polarity, subj])
+            #list(filter((0).__ne__,dataList))
+            #print(dataList)
+            #print(list)
+            df = pd.DataFrame(dataList, columns=cols)
+            #removing rows with polarity values of zero
+            df = df[df.Polarity != 0]
+            '''
+            df = df[df.Subjectivity != 1] #if want to remove subjective tweets
+            '''
+            print(df)
+            #df = data
+            #print(df.head())
         #saving to a file
-            savef = open('twitDB.csv','a')
-            savef.write(data)
+            #savef = open('twitterBitcoin.csv','a')
+            #savef.write(dataList)
         #add new line
-            savef.write('\n')
-            savef.close()
-        except BaseException, e:
+            #savef.write('\n')
+            #savef.close()
+        except BaseException as e:
             print("failed ondata,",str(e))
             time.sleep(5)
 
