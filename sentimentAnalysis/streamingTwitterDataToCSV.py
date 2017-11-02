@@ -4,6 +4,7 @@ from tweepy.streaming import StreamListener
 #import MySQLdb
 import time
 import datetime
+from datetime import timezone 
 import json
 import pandas as pd
 import textblob
@@ -61,6 +62,12 @@ class listener(StreamListener):
             #print(dataList)
             #print(list)
             df = pd.DataFrame(dataList, columns=cols)
+            #formating datetime from bla to bla
+            #datetime.datetime.strptime(df["created_at"], '%a %b %d %H:%M:%S %z %Y').replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%Y-%m-%d %H:%M:%S')
+            if not df.empty:
+                df["Date"] = pd.to_datetime(df["Date"], format="%a %b %d %H:%M:%S +0000 %Y")
+                #pd.to_datetime(df['Date'])
+
             #removing rows with polarity values of zero
             df = df[df.Polarity != 0]
             '''
@@ -68,7 +75,7 @@ class listener(StreamListener):
             df = df[df.Subjectivity != 1] 
             '''
             #saving df to csv file
-            df.to_csv('bitcoinSentiment.csv')
+            #df.to_csv('bitcoinSentiment.csv')
             print(df)
             #df = data
             #print(df.head())
