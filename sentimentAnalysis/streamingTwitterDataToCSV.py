@@ -75,8 +75,8 @@ class listener(StreamListener):
             df = df[df.Subjectivity != 1] 
             '''
             #saving df to csv file
-            #df.to_csv('bitcoinSentiment.csv')
-            print(df)
+            df.to_csv('bitcoinSentiment.csv')
+            #print(df)
             #df = data
             #print(df.head())
         #saving to a file
