@@ -64,11 +64,8 @@ class listener(StreamListener):
             #removing rows with polarity values of zero
             df = df[df.Polarity != 0]
             '''
-            #uncomment if want to remove subjective tweets
-            df = df[df.Subjectivity != 1] 
+            df = df[df.Subjectivity != 1] #if want to remove subjective tweets
             '''
-            #saving df to csv file
-            df.to_csv('bitcoinSentiment.csv')
             print(df)
             #df = data
             #print(df.head())
