@@ -58,8 +58,42 @@ dfNew = pd.DataFrame(data, columns=cols)
 
 #print(df['polarity'])
 print(dfNew.head()) 
+'''
+def stock_sentiment(quote, num_tweets):
+    # Checks if the sentiment for our quote is
+    # positive or negative, returns True if
+    # majority of valid tweets have positive sentiment
+    list_of_tweets = api.search(quote, count=num_tweets, user_timeline)
+    tweetdate = datetime.strptime(str(tweet.created_at)[:10],'%Y-%m-%d').strftime('%d-%m-%Y')
+    print(tweetdate)
+    positive, objective, neg, sub, neut  = 0, 0, 0, 0, 0 
+
+    for tweet in list_of_tweets:
+        blob = textblob.TextBlob(tweet.text).sentiment
+#The polarity score is a float within the range [-1.0, 1.0]. The subjectivity is a float within the range [0.0, 1.0] where 0.0 is very objective and 1.0 is very subjective.
+        if blob.subjectivity == 0:
+            objective += 1
+            #next
+        if blob.polarity > 0:
+            positive += 1
+        if blob.polarity < 0:
+            neg += 1
+        if blob.subjectivity == 1:
+            sub +=1
+        if blob.polarity == 0:
+            neut +=1
+
+    score = positive / ((num_tweets - objective)/2)
+    print("how its doing ",score)
+    print("values pos", positive, "negative values ", neg, "neutral", neut)
+    print("how many objective tweets ",objective, "num of subjective tweets", sub)
+    print("total tweets analyzed was ", num_tweets)
+    if positive > ((num_tweets - objective)/2):
+        return True
+'''
+
 
 #print(x)
-
+#stock_sentiment('ethereum', 100000)
 #conn.commit()
 #c.close()

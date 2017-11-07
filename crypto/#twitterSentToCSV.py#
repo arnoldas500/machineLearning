@@ -57,7 +57,9 @@ dfNew = pd.DataFrame(data, columns=cols)
 #df['polarity'] =  polarity                                                                                   
 
 #print(df['polarity'])
-print(dfNew.head()) 
+print(dfNew.head())
+
+ 
 '''
 def stock_sentiment(quote, num_tweets):
     # Checks if the sentiment for our quote is
