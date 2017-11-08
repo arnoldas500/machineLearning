@@ -72,12 +72,12 @@ X, y = windowData(scaledDF, 7)
 
 #creating training and testing sets by holding out a portion of the data set
 #first 1000 points of data for training
-X_train = np.array(X[:1000]) #look up if i can specify a percetn to hold out **note**
-y_train = np.array(y[:1000])
+X_train = np.array(X[:1100]) #look up if i can specify a percetn to hold out **note**
+y_train = np.array(y[:1100])
 
 #last 15% of data for testing
-X_test = np.array(X[1000:])
-y_test = np.array(y[1000:])
+X_test = np.array(X[1100:])
+y_test = np.array(y[1100:])
 
 print("X_train size: {}".format(X_train.shape))
 print("y_train size: {}".format(y_train.shape))
@@ -89,8 +89,8 @@ print("y_test size: {}".format(y_test.shape))
 epoch = one forward pass and one backward pass of all the training examples
 batch size = the number of training examples in one forward/backward pass
 '''
-epoches = 200
-batchSize = 7
+epoches = 60 #try 200
+batchSize = 7 #try 7
 
 def lstm(hiddenLayerSize, batchSize, numLayers, dropout=True, dropoutRate=0.8):
     layer = tf.contrib.rnn.BasicLSTMCell(hiddenLayerSize)
@@ -150,3 +150,62 @@ class StockPredictionRNN(object):
 
 tf.reset_default_graph()
 model = StockPredictionRNN()
+
+
+#taining the model
+session = tf.Session()
+session.run(tf.global_variables_initializer())
+
+for i in range(epoches):
+    trainedScores = []
+    ii=0
+    epochLoss = []
+    while(ii + batchSize) <= len(X_train):
+        X_batch = X_train[ii:ii+batchSize]
+        y_batch = y_train[ii:ii+batchSize]
+
+        o, c, _ = session.run([model.logits, model.loss, model.opt], feed_dict={model.inputs:X_batch, model.targets:y_batch})
+
+        epochLoss.append(c)
+        trainedScores.append(o)
+        ii += batchSize
+    if(i % 30) == 0:
+        #show loss at every 30 increments (or epoches)
+        print('Epoch {}/{}'.format(i, epoches), ' Current loss: {}'.format(np.mean(epochLoss)))
+
+
+sup =[]
+for i in range(len(trainedScores)):
+    for j in range(len(trainedScores[i])):
+        sup.append(trainedScores[i][j])
+
+tests = []
+i = 0
+while i+batchSize <= len(X_test):
+    
+    o = session.run([model.logits], feed_dict={model.inputs:X_test[i:i+batchSize]})
+    i += batchSize
+    tests.append(o)
+
+testsNew = []
+for i in range(len(tests)):
+    for j in range(len(tests[i][0])):
+        testsNew.append(tests[i][0][j])
+
+testResults = []
+for i in range(1300): #1266
+    if i >= 1101: #1001 when training on 1000 data points
+        testResults.append(testsNew[i-1101])
+    else:
+        testResults.append(None)
+
+#plotting predictions from the model
+plt.figure(figsize=(16, 7))
+plt.title('Scaled bitcoin data from 2014/04/15 to current date')
+plt.plot(scaledDF, label='Original data')
+plt.plot(sup, label='Training data')
+plt.plot(testResults, label='Testing data/ predictions')
+plt.legend()
+plt.show()
+
+session.close()
