@@ -12,6 +12,8 @@ Date          High     Low        Mid      Last        Volume
 2014-04-15  513.9000  452.00  504.23500  505.0000   21013.584774
 2014-04-16  537.50000  547.0000  495.00  538.0000  29633.358705
 '''
+#training model by using prvious data and showing what the next days price is
+#in this example i am using the last 7 days prices to show what the next days price is going to be
 
 import tensorflow as tf
 import pandas as pd
@@ -30,19 +32,22 @@ bitcoinDF.reset_index(level=0, inplace=True)
 
 print(bitcoinDF.head())
 
-#get these specific columns from the dataset  
+#get these specific columns from the dataset  (irrelewent right now)
 bitcoinDF = bitcoinDF[['Date','Mid' ,'High' ,'Low' ,'Last', 'Volume']]
 
 print(bitcoinDF.head())
 
-dates = bitcoinDF['Last'].values
+#only taking closeing or last price into the model, each value represents each day starting from 2014, 04, 15
+curData = bitcoinDF['Last'].values
 
-print("Num days in bitcoin DF: {}".format(len(dates)))
+#print(curData) [  505.    538.    508.  ...,  7321.8  6956.5  7102. ]
+
+print("Num days in bitcoin DF: {}".format(len(curData)))
 
 #data preprocessing
 #scaling data
 scaler = StandardScaler()
-scaledDF = scaler.fit_transform(dates.reshape(-1, 1))
+scaledDF = scaler.fit_transform(curData.reshape(-1, 1))
 
 #plot
 plt.figure(figsize=(12,7), frameon=False, facecolor='brown', edgecolor='blue')
@@ -53,6 +58,7 @@ plt.plot(scaledDF, label='bitcoin data')
 plt.legend()
 #plt.show()
 
+#note double dhcekc ***
 #seperate features and labels
 def windowData(data, windowSize):
     X = []
@@ -68,16 +74,16 @@ def windowData(data, windowSize):
     return X, y
 
 #windowing the dataset
-X, y = windowData(scaledDF, 7)
+X, y = windowData(scaledDF, 7) #second number is how many previous days prices we should use for prediction
 
 #creating training and testing sets by holding out a portion of the data set
 #first 1000 points of data for training
-X_train = np.array(X[:1100]) #look up if i can specify a percetn to hold out **note**
-y_train = np.array(y[:1100])
+X_train = np.array(X[:1200]) #look up if i can specify a percetn to hold out **note**
+y_train = np.array(y[:1200])
 
 #last 15% of data for testing
-X_test = np.array(X[1100:])
-y_test = np.array(y[1100:])
+X_test = np.array(X[1200:])
+y_test = np.array(y[1200:])
 
 print("X_train size: {}".format(X_train.shape))
 print("y_train size: {}".format(y_train.shape))
@@ -89,7 +95,7 @@ print("y_test size: {}".format(y_test.shape))
 epoch = one forward pass and one backward pass of all the training examples
 batch size = the number of training examples in one forward/backward pass
 '''
-epoches = 60 #try 200
+epoches = 1 #try 200
 batchSize = 7 #try 7
 
 def lstm(hiddenLayerSize, batchSize, numLayers, dropout=True, dropoutRate=0.8):
@@ -132,7 +138,7 @@ def optLoss(logits, targets, learningRate, gradClipMargin):
     trainOptimizer = optimizer.apply_gradients(zip(gradients, tf.trainable_variables()))
     return loss, trainOptimizer
 
-class StockPredictionRNN(object):
+class StockPredictionRNN(object): #change batch size and window size to 7
     
     def __init__(self, learningRate=0.001, batchSize=7, hiddenLayerSize=512, numLayers=1, 
                  dropout=True, dropoutRate=0.8, numClasses=1, gradientClipMargin=4, windowSize=7):
@@ -164,9 +170,9 @@ for i in range(epoches):
         X_batch = X_train[ii:ii+batchSize]
         y_batch = y_train[ii:ii+batchSize]
 
-        o, c, _ = session.run([model.logits, model.loss, model.opt], feed_dict={model.inputs:X_batch, model.targets:y_batch})
+        o, classification, _ = session.run([model.logits, model.loss, model.opt], feed_dict={model.inputs:X_batch, model.targets:y_batch})
 
-        epochLoss.append(c)
+        epochLoss.append(classification)
         trainedScores.append(o)
         ii += batchSize
     if(i % 30) == 0:
@@ -181,21 +187,29 @@ for i in range(len(trainedScores)):
 
 tests = []
 i = 0
+
+#print(X_test) values from -1 to 5
+#print(y_test)
+
 while i+batchSize <= len(X_test):
     
     o = session.run([model.logits], feed_dict={model.inputs:X_test[i:i+batchSize]})
+    #print(o) predictions
     i += batchSize
     tests.append(o)
+print(len(tests))
 
 testsNew = []
 for i in range(len(tests)):
     for j in range(len(tests[i][0])):
         testsNew.append(tests[i][0][j])
 
+print(len(testsNew))
+
 testResults = []
-for i in range(1300): #1266
-    if i >= 1101: #1001 when training on 1000 data points
-        testResults.append(testsNew[i-1101])
+for i in range(1267): #1266
+    if i >= 1204: #1001 when training on 1000 data points #1105 when training on 1100 
+        testResults.append(testsNew[i-1204])
     else:
         testResults.append(None)
 
