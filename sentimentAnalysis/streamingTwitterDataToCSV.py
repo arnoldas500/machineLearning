@@ -75,8 +75,11 @@ class listener(StreamListener):
             df = df[df.Subjectivity != 1] 
             '''
             #saving df to csv file
-            df.to_csv('bitcoinSentiment.csv')
-            #print(df)
+            df.to_csv('bitcoinSentiment.csv', mode='a') #later add if codition chceking if not empty then append mode='a'
+            
+            #stream.filter(track=[t], stall_warnings=True)
+
+#print(df)
             #df = data
             #print(df.head())
         #saving to a file
@@ -108,9 +111,11 @@ class listener(StreamListener):
 
     def on_error(self, status):
         print(status)
+        if status == 420:
+            return False
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
 twitterStream = Stream(auth, listener())
-twitterStream.filter(track=["bitcoin"])
+twitterStream.filter(track=["bitcoin"], stall_warnings=True, async=True)
