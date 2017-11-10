@@ -63,6 +63,28 @@ def get_data_from_yahoo(reload_sp500=False):
     
     #to grab all the data, can also speify tickers[:125] to grab from 0 to the first 125 or whatever
     for ticker in tickers:
+        if not os.path.exists("stock_dfs/{}.csv".format(ticker)):
+            #df = web.DataReader(ticker,"quandl",start,end)
+            try:
+                df = web.get_data_yahoo(ticker,start,end)
+                df.to_csv('stock_dfs/{}.csv'.format(ticker))
+            except: 
+                print('Cannot obtain data for ' +ticker+" with yahoo")
+                print("Trying with google : ")
+                try :
+                    df = web.DataReader(ticker,"google",start,end)
+                    df.to_csv('stock_dfs/{}.csv'.format(ticker))
+                except:
+                    print("still not working ! added to notworking pickle")
+                
+                    bad_tickers.append(ticker)
+                    with open("notworking.pickle","wb") as u:
+                        pickle.dump(bad_tickers,u)
+                
+        else:
+            print('Already have {}'.format(ticker))
+    '''
+    for ticker in tickers:
         print(ticker)
         #yahoo starts throttling so need to add time.sleep
         #time.sleep(0.9)
@@ -70,13 +92,15 @@ def get_data_from_yahoo(reload_sp500=False):
         #if the csv file for that day doesnt exist we are going to grab it
         if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
             #df = web.DataReader(ticker, "yahoo", start, end)
-            df = web.get_data_yahoo(ticker, start, end)
+            #df = web.get_data_yahoo(ticker, start, end)
+            df = download(ticker, start, end)
             df.to_csv('stock_dfs/{}.csv'.format(ticker))
         else:
             print('Already have {}'.format(ticker))
+    '''
 
 #save_sp500_tickers()
-#get_data_from_yahoo()
+get_data_from_yahoo()
 
 
 def get_data_goog(reload_sp500=False):
@@ -127,4 +151,4 @@ def compile_data():
     main_df.to_csv('sp500_joined_closes.csv')
 
 
-compile_data()
+#compile_data()
