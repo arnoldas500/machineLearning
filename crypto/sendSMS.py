@@ -1,3 +1,4 @@
+#/usr/bin/env python
 #sending sms using python script
 #will need to pip install twillo
 #my number: +16314961619
@@ -11,6 +12,8 @@ from urllib.request import urlopen
 import codecs
 
 public_client = gdax.PublicClient()
+
+client = Client(account_sid, auth_token)
 
 def gdax():
    
@@ -42,7 +45,7 @@ def gdax():
     print('low ',day['low'])
     time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print(time)
-    print("change up to current time from start of day",pctChange)
+    print("change up to current time from start of day ",pctChange)
 
     dayETH = public_client.get_product_24hr_stats('ETH-USD')
 
@@ -87,20 +90,32 @@ def gdax():
         if(abs(pctChange)>5):
             btcPass = False
             client.api.account.messages.create(
-                to="+1637047013",
+                to="+16317047013",
                 from_="+16314961619",
-                body="change up to current time from start of day ",pctChange)
+                body="BTC change up to current time from start of day "+str(pctChange)+"\n\n -Arnold")
             
     else:
         pass
 
     if(ethPass):
-        if(abs(pctChange)>5):
+        if(abs(pctChangeETH)>5):
             ethPass = False
             client.api.account.messages.create(
-                to="+1637047013",
+                to="+16317047013",
                 from_="+16314961619",
-                body="change up to current time from start of day ",pctChangeETH)
+                body="ETH change up to current time from start of day "+str(pctChangeETH)+"\n\n -Arnold")
+            
+    else:
+        pass
+
+    if(ltcPass):
+        if(abs(pctChangeLTC)>5):
+            print("about to send message for LTC change")
+            ltcPass = False
+            client.api.account.messages.create(
+                to="+16317047013",
+                from_="+16314961619",
+                body="LTC change up to current time from start of day "+str(pctChangeLTC)+"\n\n -Arnold")
             
     else:
         pass
