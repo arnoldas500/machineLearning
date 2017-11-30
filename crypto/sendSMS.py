@@ -12,6 +12,8 @@ from urllib.request import urlopen
 import codecs
 
 public_client = gdax.PublicClient()
+account_sid = "ACdef9cc8e2b2597ee6efb2cb07791623d"
+auth_token = "7391412bd1dd27a228e538067617a162"
 
 client = Client(account_sid, auth_token)
 
@@ -43,8 +45,8 @@ def gdax():
     print('last ',day['last'])
     print('high ',day['high'])
     print('low ',day['low'])
-    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    print(time)
+    timeB = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print(timeB)
     print("change up to current time from start of day ",pctChange)
 
     dayETH = public_client.get_product_24hr_stats('ETH-USD')
@@ -59,8 +61,8 @@ def gdax():
     print('last ',dayETH['last'])
     print('high ',dayETH['high'])
     print('low ',dayETH['low'])
-    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    print(time)
+    timeE = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print(timeE)
     print("change up to current time from start of day",pctChangeETH)
 
 
@@ -77,25 +79,47 @@ def gdax():
     print('last ',dayLTC['last'])
     print('high ',dayLTC['high'])
     print('low ',dayLTC['low'])
-    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    print(time)
+    timeL = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print(timeL)
     print("change up to current time from start of day",pctChangeLTC)
 
 
     btcPass = True
     ethPass = True
     ltcPass = True
+    time1 = time.time()
+    #to get the diff time.time() - time1
+    #seconds in 2 hours = 7200
+    comparePrice = 0
+
+    if(comparePrice = 0):
+         pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
+    else:
+         pctChange = (float(day['last']) - float(comparePrice) ) / float(comparePrice) * 100
+
+    if(abs(pctChange)>5):
+        if(btcPass):
+            #btcPass = False
+            client.api.account.messages.create(
+                    to="+16317047013",
+                    from_="+16314961619",
+                    body="BTC change up to current time from start of day "+str(pctChange)+"\n\n -Arnold")
+    else:
+        #btcPass = True
+        pass
 
     if(btcPass):
         if(abs(pctChange)>5):
-            btcPass = False
-            client.api.account.messages.create(
-                to="+16317047013",
-                from_="+16314961619",
-                body="BTC change up to current time from start of day "+str(pctChange)+"\n\n -Arnold")
+            #btcPass = False
+            
+            if((time.time() - last) > 7200 ):
+                client.api.account.messages.create(
+                    to="+16317047013",
+                    from_="+16314961619",
+                    body="BTC change up to current time from start of day "+str(pctChange)+"\n\n -Arnold")
             
     else:
-        pass
+        last = time.time()
 
     if(ethPass):
         if(abs(pctChangeETH)>5):
