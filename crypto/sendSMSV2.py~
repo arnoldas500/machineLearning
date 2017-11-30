@@ -13,8 +13,8 @@ import codecs
 import sys
 
 public_client = gdax.PublicClient()
-account_sid = 
-auth_token = 
+account_sid = "ACdef9cc8e2b2597ee6efb2cb07791623d"
+auth_token = "7391412bd1dd27a228e538067617a162"
 
 client = Client(account_sid, auth_token)
 
