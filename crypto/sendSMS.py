@@ -1,6 +1,115 @@
 #sending sms using python script
 #will need to pip install twillo
 #my number: +16314961619
+from twilio.rest import Client
+import gdax
+from time import gmtime, strftime
+import time
+import json
+import urllib
+from urllib.request import urlopen
+import codecs
+
+public_client = gdax.PublicClient()
+
+def gdax():
+   
+
+    #products = public_client.get_products()
+    # Get the order book at the default level.
+    public_client.get_product_order_book('BTC-USD')
+    # Get the order book at a specific level.
+    public_client.get_product_order_book('BTC-USD', level=1)
+    # Get the product ticker for a specific product.
+    tickerBTC = public_client.get_product_ticker(product_id='BTC-USD')
+    tickerETH = public_client.get_product_ticker(product_id='ETH-USD')
+    tickerLTC = public_client.get_product_ticker(product_id='LTC-USD')
+
+    #historic rates
+    histRate = public_client.get_product_historic_rates('ETH-USD')
+
+    day = public_client.get_product_24hr_stats('BTC-USD')
+
+    #daily % change or daily move
+    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
+    pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
+
+    #print(day['PCT_change'])
+    print('gdax exchange for BTC in USD')
+    print('open ',day['open'])
+    print('last ',day['last'])
+    print('high ',day['high'])
+    print('low ',day['low'])
+    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print(time)
+    print("change up to current time from start of day",pctChange)
+
+    dayETH = public_client.get_product_24hr_stats('ETH-USD')
+
+    #daily % change or daily move
+    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
+    pctChangeETH = (float(dayETH['last']) - float(dayETH['open']) ) / float(dayETH['open']) * 100
+
+    #print(day['PCT_change'])
+    print('gdax exchange for ETH in USD')
+    print('open ',dayETH['open'])
+    print('last ',dayETH['last'])
+    print('high ',dayETH['high'])
+    print('low ',dayETH['low'])
+    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print(time)
+    print("change up to current time from start of day",pctChangeETH)
+
+
+
+    dayLTC = public_client.get_product_24hr_stats('LTC-USD')
+
+    #daily % change or daily move
+    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
+    pctChangeLTC = (float(dayLTC['last']) - float(dayLTC['open']) ) / float(dayLTC['open']) * 100
+
+    #print(day['PCT_change'])
+    print('gdax exchange for LTC in USD')
+    print('open ',dayLTC['open'])
+    print('last ',dayLTC['last'])
+    print('high ',dayLTC['high'])
+    print('low ',dayLTC['low'])
+    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print(time)
+    print("change up to current time from start of day",pctChangeLTC)
+
+
+    btcPass = True
+    ethPass = True
+    ltcPass = True
+
+    if(btcPass):
+        if(abs(pctChange)>5):
+            btcPass = False
+            client.api.account.messages.create(
+                to="+1637047013",
+                from_="+16314961619",
+                body="change up to current time from start of day ",pctChange)
+            
+    else:
+        pass
+
+    if(ethPass):
+        if(abs(pctChange)>5):
+            ethPass = False
+            client.api.account.messages.create(
+                to="+1637047013",
+                from_="+16314961619",
+                body="change up to current time from start of day ",pctChangeETH)
+            
+    else:
+        pass
+
+#run it
+#while(true)
+gdax()
+
+
 '''
 # /usr/bin/env python
 # Download the twilio-python library from twilio.com/docs/libraries/python
@@ -66,34 +175,4 @@ while True:
     time.sleep(1)
 '''
 
-import gdax
-from time import gmtime, strftime
-public_client = gdax.PublicClient()
 
-products = public_client.get_products()
-# Get the order book at the default level.
-public_client.get_product_order_book('BTC-USD')
-# Get the order book at a specific level.
-public_client.get_product_order_book('BTC-USD', level=1)
-# Get the product ticker for a specific product.
-tickerBTC = public_client.get_product_ticker(product_id='BTC-USD')
-tickerETH = public_client.get_product_ticker(product_id='ETH-USD')
-tickerLTC = public_client.get_product_ticker(product_id='LTC-USD')
-
-#historic rates
-histRate = public_client.get_product_historic_rates('ETH-USD')
-
-day = public_client.get_product_24hr_stats('BTC-USD')
-
-#daily % change or daily move
-#df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
-pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
-
-#print(day['PCT_change'])
-print('open ',day['open'])
-print('last ',day['last'])
-print('high ',day['high'])
-print('low ',day['low'])
-time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-print(time)
-print("change up to current time from start of day",pctChange)
