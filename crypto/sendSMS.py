@@ -12,8 +12,7 @@ from urllib.request import urlopen
 import codecs
 
 public_client = gdax.PublicClient()
-account_sid = "ACdef9cc8e2b2597ee6efb2cb07791623d"
-auth_token = "7391412bd1dd27a228e538067617a162"
+
 
 client = Client(account_sid, auth_token)
 
@@ -37,7 +36,55 @@ def gdax():
 
     #daily % change or daily move
     #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
-    pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
+    #pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
+
+    
+
+    dayETH = public_client.get_product_24hr_stats('ETH-USD')
+
+    #daily % change or daily move
+    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
+    #pctChangeETH = (float(dayETH['last']) - float(dayETH['open']) ) / float(dayETH['open']) * 100
+
+    
+
+
+
+    dayLTC = public_client.get_product_24hr_stats('LTC-USD')
+
+    #daily % change or daily move
+    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
+    #pctChangeLTC = (float(dayLTC['last']) - float(dayLTC['open']) ) / float(dayLTC['open']) * 100
+
+
+    btcPass = True
+    ethPass = True
+    ltcPass = True
+    time1 = time.time()
+    #to get the diff time.time() - time1
+    #seconds in 2 hours = 7200
+    #changing from using time to send message
+    #to if price changes from the last compare price at least 5% then send messgae
+    comparePrice = 0
+    comparePriceETH = 0
+    comparePriceLTC = 0
+    
+
+    if(comparePrice == 0):
+         pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
+    else:
+         pctChange = (float(day['last']) - float(comparePrice) ) / float(comparePrice) * 100
+
+    if(comparePriceETH == 0):
+         pctChangeETH = (float(dayETH['last']) - float(dayETH['open']) ) / float(dayETH['open']) * 100
+    else:
+         pctChangeETH = (float(dayETH['last']) - float(comparePriceETH) ) / float(comparePriceETH) * 100
+
+    if(comparePriceLTC == 0):
+         pctChangeLTC = (float(dayLTC['last']) - float(dayLTC['open']) ) / float(dayLTC['open']) * 100
+    else:
+         pctChangeLTC = (float(dayLTC['last']) - float(comparePriceLTC) ) / float(comparePriceLTC) * 100
+
 
     #print(day['PCT_change'])
     print('gdax exchange for BTC in USD')
@@ -48,13 +95,7 @@ def gdax():
     timeB = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print(timeB)
     print("change up to current time from start of day ",pctChange)
-
-    dayETH = public_client.get_product_24hr_stats('ETH-USD')
-
-    #daily % change or daily move
-    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
-    pctChangeETH = (float(dayETH['last']) - float(dayETH['open']) ) / float(dayETH['open']) * 100
-
+         
     #print(day['PCT_change'])
     print('gdax exchange for ETH in USD')
     print('open ',dayETH['open'])
@@ -64,16 +105,8 @@ def gdax():
     timeE = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print(timeE)
     print("change up to current time from start of day",pctChangeETH)
-
-
-
-    dayLTC = public_client.get_product_24hr_stats('LTC-USD')
-
-    #daily % change or daily move
-    #df['PCT_change'] = (df['Close'] - df['Open'] ) / df['Open'] * 100.0
-    pctChangeLTC = (float(dayLTC['last']) - float(dayLTC['open']) ) / float(dayLTC['open']) * 100
-
-    #print(day['PCT_change'])
+    
+     #print(day['PCT_change'])
     print('gdax exchange for LTC in USD')
     print('open ',dayLTC['open'])
     print('last ',dayLTC['last'])
@@ -83,31 +116,21 @@ def gdax():
     print(timeL)
     print("change up to current time from start of day",pctChangeLTC)
 
-
-    btcPass = True
-    ethPass = True
-    ltcPass = True
-    time1 = time.time()
-    #to get the diff time.time() - time1
-    #seconds in 2 hours = 7200
-    comparePrice = 0
-
-    if(comparePrice = 0):
-         pctChange = (float(day['last']) - float(day['open']) ) / float(day['open']) * 100
-    else:
-         pctChange = (float(day['last']) - float(comparePrice) ) / float(comparePrice) * 100
-
+    
     if(abs(pctChange)>5):
         if(btcPass):
             #btcPass = False
+            comparePrice = float(day['last'])
+            print("about to send message for BTC change")
             client.api.account.messages.create(
                     to="+16317047013",
                     from_="+16314961619",
-                    body="BTC change up to current time from start of day "+str(pctChange)+"\n\n -Arnold")
+                    body="gdax exchange for BTC in USD\n"+'last '+str(day['last'])+"\nBTC % change from last comparedPrice "+comparePrice+" is "+str(pctChange)+"\n\n -Arnold")
     else:
         #btcPass = True
         pass
 
+    '''
     if(btcPass):
         if(abs(pctChange)>5):
             #btcPass = False
@@ -120,33 +143,38 @@ def gdax():
             
     else:
         last = time.time()
+    '''
 
     if(ethPass):
         if(abs(pctChangeETH)>5):
-            ethPass = False
+            #ethPass = False
+            comparePriceETH = float(dayETH['last'])
+            print("about to send message for ETH change")
             client.api.account.messages.create(
                 to="+16317047013",
                 from_="+16314961619",
-                body="ETH change up to current time from start of day "+str(pctChangeETH)+"\n\n -Arnold")
+                body="ETH % change from last comparedPrice "+comparePriceETH+" is "+str(pctChangeETH)+"\n\n -Arnold")
             
     else:
         pass
 
     if(ltcPass):
         if(abs(pctChangeLTC)>5):
+            comparePriceLTC = float(dayLTC['last'])
             print("about to send message for LTC change")
-            ltcPass = False
+            #ltcPass = False
             client.api.account.messages.create(
                 to="+16317047013",
                 from_="+16314961619",
-                body="LTC change up to current time from start of day "+str(pctChangeLTC)+"\n\n -Arnold")
+                body="LTC % change from last comparedPrice "+comparePriceLTC+" is "+str(pctChangeLTC)+"\n\n -Arnold")
             
     else:
         pass
 
 #run it
-#while(true)
-gdax()
+while(true):
+    gdax()
+    sleep(1)
 
 
 '''
