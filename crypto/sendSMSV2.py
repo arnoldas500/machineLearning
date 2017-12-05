@@ -13,7 +13,8 @@ import codecs
 import sys
 
 public_client = gdax.PublicClient()
-
+account_sid = "ACdef9cc8e2b2597ee6efb2cb07791623d"
+auth_token = "7391412bd1dd27a228e538067617a162"
 
 client = Client(account_sid, auth_token)
 
@@ -140,14 +141,15 @@ def gdax():
     if(abs(pctChange)>5):
         if(btcPass):
             #btcPass = False
-            comparePrice = float(day['last'])
+            
 
             print("about to send message for BTC change")
             client.api.account.messages.create(
                     to="+16317047013",
                     from_="+16314961619",
                     #body="BTC % change from last comparedPrice "+str(comparePrice)+" is "+str(pctChange)+"\n\n -Arnold")
-                    body="gdax exchange for BTC in USD\n"+'last '+str(day['last'])+"\nBTC % change from last comparedPrice "+str(comparePrice)+" is "+str(pctChange)+"\n\n -Arnold")
+                    body="gdax exchange for BTC in USD\n"+'last '+str(day['last'])+"\nBTC % change from last comparedPrice "+str(comparePrice)+" is %"+str(pctChange)+"\n\n -Arnold")
+            comparePrice = float(day['last'])
     else:
         #btcPass = True
         pass
@@ -172,27 +174,29 @@ def gdax():
     if(ethPass):
         if(abs(pctChangeETH)>5):
             #ethPass = False
-            comparePriceETH = float(dayETH['last'])
+            
             print("about to send message for ETH change")
             client.api.account.messages.create(
                 to="+16317047013",
                 from_="+16314961619",
                 #body="ETH % change from last comparedPrice "+str(comparePriceETH)+" is "+str(pctChangeETH)+"\n\n -Arnold")
-                body="gdax exchange for ETH in USD\n"+'last '+str(dayETH['last'])+"\nBTC % change from last comparedPrice "+str(comparePriceETH)+" is "+str(pctChangeETH)+"\n\n -Arnold")
+                body="gdax exchange for ETH in USD\n"+'last '+str(dayETH['last'])+"\nETH % change from last comparedPrice "+str(comparePriceETH)+" is %"+str(pctChangeETH)+"\n\n -Arnold")
+            comparePriceETH = float(dayETH['last'])
 
     else:
         pass
 
     if(ltcPass):
         if(abs(pctChangeLTC)>5):
-            comparePriceLTC = float(dayLTC['last'])
+            
             print("about to send message for LTC change")
             #ltcPass = False
             client.api.account.messages.create(
                 to="+16317047013",
                 from_="+16314961619",
                 #body="LTC % change from last comparedPrice "+str(comparePriceLTC)+" is "+str(pctChangeLTC)+"\n\n -Arnold")
-                body="gdax exchange for LTC in USD\n"+'last '+str(dayLTC['last'])+"\nBTC % change from last comparedPrice "+str(comparePriceLTC)+" is "+str(pctChangeLTC)+"\n\n -Arnold")
+                body="gdax exchange for LTC in USD\n"+'last '+str(dayLTC['last'])+"\nLTC % change from last comparedPrice "+str(comparePriceLTC)+" is %"+str(pctChangeLTC)+"\n\n -Arnold")
+            comparePriceLTC = float(dayLTC['last'])
 
     else:
         pass

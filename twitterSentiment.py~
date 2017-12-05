@@ -28,6 +28,6 @@ public_tweets = api.search('Trump')
 #subjectivity shows how much of an opinion it is compared to how much of a fact it is
 for tweet in public_tweets:
     print(tweet.text)
-    analysis = TextBlob(tweet.text)
+    analysis = textblob.TextBlob(tweet.text)
     print(analysis.sentiment)
 
