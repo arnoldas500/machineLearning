@@ -1,0 +1,71 @@
+Monitors:
+Dell U3417W FR3PK 34-Inch Screen Led-Lit Monitor → $718 or $600 for older model
+https://www.amazon.com/Dell-FR3PK-34-Inch-Led-Lit-Monitor/dp/B01IOO4TIM/?tag=bestusbpoweredmonitor-20&th=1
+
+LG 34 → $600
+https://www.amazon.com/LG-34UC79G-B-34-Inch-21-UltraWide/dp/B01LW5CGIS/ref=pd_sbs_147_7?_encoding=UTF8&pd_rd_i=B01LW5CGIS&pd_rd_r=XZ5M6RMP7ZHSKHYE8TFC&pd_rd_w=YhVZk&pd_rd_wg=sdFse&psc=1&refRID=XZ5M6RMP7ZHSKHYE8TFC
+
+GPUs:
+(best for ML overall in everything )
+GTX 1080 Ti 11GB watercooled → $900 about $700 for non watercooled and about $550 for a gtx 1080 regular but the Ti version blows it away
+https://www.amazon.com/Gigabyte-GV-N108TAORUSX-W-11GD-GeForce-Waterforce/dp/B073D584Z1/ref=sr_1_5?s=electronics&ie=UTF8&qid=1515009353&sr=1-5&keywords=gtx+1080+ti
+
+(used to be the best but even with 12GB the 1080 Ti is still better)
+GTX TITAN X 12GB → $900 https://www.amazon.com/EVGA-GeForce-GAMING-Graphics-12G-P4-2990-KR/dp/B00UVN21RQ?th=1
+
+GTX 1070 Ti 8GB → $550 (best if we get limited by a budget)
+https://www.amazon.com/EVGA-GeForce-Scanner-Graphics-08G-P4-5671-KR/dp/B076S4RH6K/ref=sr_1_1?s=electronics&ie=UTF8&qid=1515009671&sr=1-1&keywords=GTX+1070+Ti
+
+GTX 980 Ti → about $600 used (sold out everywhere new) and over priced and crappy for anything else but good for ML, benchmarks about the same as the 1080 but the 1080 can be used for so much more
+https://www.amazon.com/EVGA-GeForce-Clocked-Graphic-06G-P4-4995-KR/dp/B00YDAYOEG?th=1
+
+Storage:
+(will need a minimum of 3 hard drives to use RAID 5 plus an extra 2 as spare drives)
+
+If money isnt an issue
+Gold 12TB → $500 but has high capacity and is super fast
+https://www.amazon.com/Western-Digital-Enterprise-Class-Drive/dp/B075L6FJH8?psc=1&SubscriptionId=AKIAINYWQL7SPW7D7JCA&tag=aboutcom02lifewire-20&linkCode=sp1&camp=2025&creative=165953&creativeASIN=B075L6FJH8&ascsubtag=833475%7Cgoogle.com%7C%7C%7C66%2C21%2C83%2C49%2C74%2C26%2C3%2C9%2C79%7C1%7C
+
+
+Best for speed and has 6TB on one drive
+WD Black 6TB → $200
+https://www.amazon.com/Black-Performance-Desktop-Hard-Drive/dp/B01MQWHTBE?psc=1&SubscriptionId=AKIAINYWQL7SPW7D7JCA&tag=aboutcom02lifewire-20&linkCode=sp1&camp=2025&creative=165953&creativeASIN=B01MQWHTBE&ascsubtag=833475%7Cgoogle.com%7C%7C%7C66%2C21%2C83%2C49%2C74%2C26%2C3%2C9%2C79%7C1%7C
+
+
+Best capacity for price but only 5400 rpm
+WD Blue 4TB → $100
+https://www.amazon.com/Blue-Desktop-Hard-Disk-Drive/dp/B013HNYV8I?psc=1&SubscriptionId=AKIAINYWQL7SPW7D7JCA&tag=aboutcom02lifewire-20&linkCode=sp1&camp=2025&creative=165953&creativeASIN=B013HNYV8I&ascsubtag=833475%7Cgoogle.com%7C%7C%7C66%2C21%2C83%2C49%2C74%2C26%2C3%2C9%2C79%7C1%7C
+
+
+Case:
+Same one I personally have and it's great. Also makes it very easy to swap out hard drives from the front. Also designed to keep GPUs cool.
+Corsair Graphite Series 760T Full Tower → $170
+https://www.amazon.com/Corsair-Graphite-760T-Tower-Windowed/dp/B071DXQTZQ?th=1
+
+(if we need something cheaper and smaller)
+ATX Mid Tower → $60 
+
+Power supply:
+Wouldn't get anything smaller than 1000 watt in case we decide to get 2 GPUs or eventually upgrade
+EVGA SuperNOVA 1000 → $250
+https://www.amazon.com/EVGA-SuperNOVA-PLATINUM-Crossfire-220-P2-1000-XR/dp/B00EKJQM5E
+
+Memory:
+Corsair Vengeance LPX DDR4 16GB → $200 
+
+CPU:
+Best option:
+Intel BX80684I78700K 8th Gen Core i7-8700K Processor → $380
+https://www.amazon.com/Intel-BX80684I78700K-Core-i7-8700K-Processor/dp/B07598VZR8/ref=sr_1_2?s=electronics&ie=UTF8&qid=1515014413&sr=1-2&keywords=i7+8700k
+
+
+Intel - Core i7-6700K 4.0GHz Quad-Core Processor → $330 Plus will need either a fan or water cooler
+https://www.amazon.com/Intel-Unlocked-Skylake-Processor-BX80662I76700K/dp/B01D4C7Z9Y?th=1
+
+
+Motherboard:
+(if money isn't an issue)
+(will also need a z300 series motherboard if we go with the 8th gen intel cpu)
+Asus - Intel Z170 Chipset → $285
+https://www.amazon.com/Asus-Desktop-Motherboard-LGA-1151-Z170-DELUXE/dp/B0126R1XNM
+
